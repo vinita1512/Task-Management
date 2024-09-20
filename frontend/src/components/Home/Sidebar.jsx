@@ -1,10 +1,17 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { TbNotes } from "react-icons/tb";
 import { MdLabelImportantOutline } from "react-icons/md";
 import { FaCheckDouble } from "react-icons/fa6";
 import { TbNotebookOff } from "react-icons/tb";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { authActions } from "../../store/auth";
+import axios from "axios";
+
 const Sidebar = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const data = [
     {
       title: "All tasks",
@@ -27,14 +34,46 @@ const Sidebar = () => {
       link: "/incompletedTasks",
     },
   ];
+  const [Data, setData] = useState();
+
+  const logout = () => {
+    dispatch(authActions.logout());
+    localStorage.clear("id");
+    localStorage.clear("token");
+    navigate("/login");
+  };
+
+  const headers = {
+    id: localStorage.getItem("id"),
+    authorization: `Bearer ${localStorage.getItem("token")}`,
+  };
+
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:1000/api/v1/getalltasks",
+          {
+            headers,
+          }
+        );
+        setData(response.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetch();
+  }, []);
 
   return (
     <>
-      <div>
-        <h2 className="text-xl font-semibold">vini</h2>
-        <h4 className="text-gray mb-1">vini@gmail.com</h4>
-        <hr />
-      </div>
+      {Data && (
+        <div>
+          <h2 className="text-xl font-semibold">{Data.username}</h2>
+          <h4 className="text-gray mb-1">{Data.email}</h4>
+          <hr />
+        </div>
+      )}
       <div>
         {data.map((items, i) => (
           <Link
@@ -49,7 +88,9 @@ const Sidebar = () => {
         ))}
       </div>
       <div>
-        <button className="bg-gray-600 w-full p-2 rounded">Logout</button>
+        <button className="bg-gray-600 w-full p-2 rounded" onClick={logout}>
+          Logout
+        </button>
       </div>
     </>
   );

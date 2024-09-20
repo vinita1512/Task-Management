@@ -7,11 +7,11 @@ router.post("/createtask", authenticateToken, async (req, res) => {
   try {
     const { title, desc, important = false, complete = false } = req.body;
     const { id } = req.headers;
-    const newTask = new Task({ title: title, desc: desc,  important, complete});
+    const newTask = new Task({ title: title, desc: desc, important, complete });
     const saveTask = await newTask.save();
     const taskId = saveTask._id;
     await User.findByIdAndUpdate(id, { $push: { tasks: taskId._id } });
-    res.status(200).json({ message: "Task Created" });
+    res.status(200).json({ message: "Task Created", newTask });
   } catch (error) {
     console.log(error);
     res.status(400).json({
@@ -55,8 +55,13 @@ router.put("/updatetask/:id", authenticateToken, async (req, res) => {
   try {
     const { id } = req.params;
     const { title, desc } = req.body;
-    await Task.findByIdAndUpdate(id, { title: title, desc: desc });
-    res.status(200).json({ message: "Tasks updated successfully" });
+
+    const editTask = await Task.findByIdAndUpdate(
+      id,
+      { title: title, desc: desc },
+      { new: true }
+    );
+    res.status(200).json({ message: "Tasks updated successfully", editTask });
   } catch (error) {
     console.log(error);
     res.status(400).json({
@@ -68,10 +73,10 @@ router.put("/updatetask/:id", authenticateToken, async (req, res) => {
 router.put("/updateimptask/:id", authenticateToken, async (req, res) => {
   try {
     const { id } = req.params;
-    const TaskData = await Task.findById(id)
+    const TaskData = await Task.findById(id);
     const ImpTask = TaskData.important;
     await Task.findByIdAndUpdate(id, { important: !ImpTask });
-    res.status(200).json({ message: "Tasks updated successfully" });
+    res.status(200).json({ message: "Important Task updated successfully" });
   } catch (error) {
     console.log(error);
     res.status(400).json({
@@ -83,10 +88,13 @@ router.put("/updateimptask/:id", authenticateToken, async (req, res) => {
 router.put("/updatecomptask/:id", authenticateToken, async (req, res) => {
   try {
     const { id } = req.params;
-    const TaskData = await Task.findById(id)
+    const TaskData = await Task.findById(id);
+    if (!TaskData) {
+      throw Error("Task not found");
+    }
     const CompTask = TaskData.complete;
     await Task.findByIdAndUpdate(id, { complete: !CompTask });
-    res.status(200).json({ message: "Tasks updated successfully" });
+    res.status(200).json({ message: "Tasks updated successfully", TaskData });
   } catch (error) {
     console.log(error);
     res.status(400).json({
@@ -101,7 +109,7 @@ router.get("/getimptasks", authenticateToken, async (req, res) => {
     const { id } = req.headers;
     const Data = await User.findById(id).populate({
       path: "tasks",
-      match : {important: true},
+      match: { important: true },
       options: { sort: { createdAt: -1 } },
     });
     const ImpTaskData = Data.tasks;
@@ -120,7 +128,7 @@ router.get("/getcomptasks", authenticateToken, async (req, res) => {
     const { id } = req.headers;
     const Data = await User.findById(id).populate({
       path: "tasks",
-      match : {complete: true},
+      match: { complete: true },
       options: { sort: { createdAt: -1 } },
     });
     const CompTaskData = Data.tasks;
@@ -139,7 +147,7 @@ router.get("/getincomptasks", authenticateToken, async (req, res) => {
     const { id } = req.headers;
     const Data = await User.findById(id).populate({
       path: "tasks",
-      match : {complete: false},
+      match: { complete: false },
       options: { sort: { createdAt: -1 } },
     });
     const CompTaskData = Data.tasks;
