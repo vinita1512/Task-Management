@@ -47,7 +47,7 @@ const Login = () => {
         <input
           type="text"
           placeholder="enter username"
-          className="bg-gray-700 px-3 py-2 my-3 w-full rounded"
+          className="bg-customGrayishCyan text-customDarkTeal px-3 py-2 my-3 w-full rounded"
           name="username"
           value={data.username}
           onChange={change}
@@ -56,14 +56,14 @@ const Login = () => {
         <input
           type="password"
           placeholder="enter password"
-          className="bg-gray-700 px-3 py-2 my-3 w-full rounded"
+          className="bg-customGrayishCyan text-customDarkTeal px-3 py-2 my-3 w-full rounded"
           name="password"
           value={data.password}
           onChange={change}
         />
         <div className="w-full flex justify-between items-center">
           <button
-            className="bg-blue-400 text-xl font-semibold px-3 py-2 rounded"
+            className="bg-customTealBlue text-xl font-semibold px-3 py-2 rounded"
             onClick={submit}
           >
             Login

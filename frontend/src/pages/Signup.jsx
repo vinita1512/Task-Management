@@ -41,7 +41,7 @@ const Signup = () => {
         <input
           type="text"
           placeholder="enter username"
-          className="bg-gray-700 px-3 py-2 my-3 w-full rounded"
+          className="bg-customGrayishCyan px-3 py-2 my-3 w-full rounded text-customDarkTeal"
           name="username"
           value={data.username}
           onChange={change}
@@ -49,7 +49,7 @@ const Signup = () => {
         <input
           type="email"
           placeholder="enter email"
-          className="bg-gray-700 px-3 py-2 my-3 w-full rounded"
+          className="bg-customGrayishCyan px-3 py-2 my-3 w-full rounded text-customDarkTeal"
           name="email"
           value={data.email}
           onChange={change}
@@ -58,14 +58,14 @@ const Signup = () => {
         <input
           type="password"
           placeholder="enter password"
-          className="bg-gray-700 px-3 py-2 my-3 w-full rounded"
+          className="bg-customGrayishCyan px-3 py-2 my-3 w-full rounded text-customDarkTeal"
           name="password"
           value={data.password}
           onChange={change}
         />
         <div className="w-full flex justify-between items-center">
           <button
-            className="bg-blue-400 text-xl font-semibold px-3 py-2 rounded"
+            className="bg-customTealBlue text-xl font-semibold px-3 py-2 rounded"
             onClick={submit}
           >
             Signup

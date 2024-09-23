@@ -3,7 +3,7 @@ import { TbNotes } from "react-icons/tb";
 import { MdLabelImportantOutline } from "react-icons/md";
 import { FaCheckDouble } from "react-icons/fa6";
 import { TbNotebookOff } from "react-icons/tb";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { authActions } from "../../store/auth";
 import axios from "axios";
@@ -11,6 +11,7 @@ import axios from "axios";
 const Sidebar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const data = [
     {
@@ -68,9 +69,11 @@ const Sidebar = () => {
   return (
     <>
       {Data && (
-        <div>
-          <h2 className="text-xl font-semibold">{Data.username}</h2>
-          <h4 className="text-gray mb-1">{Data.email}</h4>
+        <div className="bg-customTealBlue w-full p-2 rounded border-double border-8">
+          <h2 className="text-xl font-semibold border-b font-mono">
+            {Data.username}
+          </h2>
+          <h4 className="text-gray mb-1 font-mono">{Data.email}</h4>
           <hr />
         </div>
       )}
@@ -79,7 +82,11 @@ const Sidebar = () => {
           <Link
             to={items.link}
             key={i}
-            className="my-2 flex items-center hover:bg-gray-500 rounded p-2 transition-all duration-100"
+            className={`my-2 flex items-center p-2 transition-all duration-100 border-2 rounded ${
+              location.pathname === items.link
+                ? "bg-customTealBlue border-b-8"
+                : "hover:bg-customTealBlue"
+            }`}
           >
             {items.icons}
             &nbsp;
@@ -88,7 +95,10 @@ const Sidebar = () => {
         ))}
       </div>
       <div>
-        <button className="bg-gray-600 w-full p-2 rounded" onClick={logout}>
+        <button
+          className="bg-customTealBlue w-full p-2 rounded hover:border-2"
+          onClick={logout}
+        >
           Logout
         </button>
       </div>

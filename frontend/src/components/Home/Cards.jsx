@@ -40,13 +40,6 @@ const Cards = ({
       setInputDiv("fixed");
       console.log("Edit", id, title, desc);
       setEditData({ id: id, title: title, desc: desc });
-
-      // const response = await axios.put(
-      //   `http://localhost:1000/api/v1/updatetask/${id}`,
-      //   {},
-      //   { headers }
-      // );
-      // console.log("response of edit task", response);
     } catch (error) {
       console.log(error);
     }
@@ -58,7 +51,7 @@ const Cards = ({
         data.map((items, i) => (
           <div
             key={items._id}
-            className="flex flex-col justify-between border border-r-red-50 bg-gray-700 rounded-xl p-4"
+            className="flex flex-col justify-between border border-r-red-50 bg-customDarkTeal rounded-xl p-4"
           >
             <div>
               <h3 className="text-xl font-semibold">{items.title}</h3>
@@ -69,7 +62,7 @@ const Cards = ({
               <button
                 className={`${
                   items.complete === true ? "bg-green-500" : "bg-red-500"
-                } p-2 rounded"`}
+                } p-2 rounded  hover:border-2  transition-all duration-300`}
                 onClick={() => handleCompleteTask(items._id)}
               >
                 {items.complete === true ? "Completed" : "In Completed"}
@@ -78,9 +71,9 @@ const Cards = ({
               <div className="text-white p-2 w-3/6 text-2xl flex font-semibold justify-around">
                 <button onClick={() => handleImportantTask(items._id)}>
                   {items.important === true ? (
-                    <FaHeart className="text-red-500" />
+                    <FaHeart className="text-red-500 hover:scale-125 transition-transform duration-300" />
                   ) : (
-                    <CiHeart />
+                    <CiHeart className="hover:scale-125 transition-transform duration-300" />
                   )}
                 </button>
                 {home === "true" && (
@@ -89,12 +82,12 @@ const Cards = ({
                       handleEditTask(items._id, items.title, items.desc)
                     }
                   >
-                    <FaRegEdit />
+                    <FaRegEdit className="hover:scale-125 transition-transform duration-300" />
                   </button>
                 )}
 
                 <button onClick={() => handleDeleteTask(items._id)}>
-                  <RiDeleteBin2Line />
+                  <RiDeleteBin2Line className="hover:scale-125 transition-transform duration-300"/>
                 </button>
               </div>
             </div>
@@ -102,11 +95,11 @@ const Cards = ({
         ))}
       {home === "true" && (
         <button
-          className="flex flex-col justify-center items-center border border-r-red-50 bg-gray-700 rounded-xl p-4 hover:scale-105 transition-all duration-300"
+          className="flex flex-col justify-center items-center border-4 border-r-red-50 bg-customDarkTeal rounded-xl p-4 hover:scale-105 transition-all duration-300"
           onClick={() => setInputDiv("fixed")}
         >
           <MdAddCircle className="text-5xl" />
-          <h2 className="text-2xl mt-4"> Add Tasks</h2>
+          <h2 className="text-2xl mt-4 "> Add Tasks</h2>
         </button>
       )}
     </div>

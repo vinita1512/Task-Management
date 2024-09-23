@@ -25,7 +25,7 @@ const App = () => {
   }, []);
 
   return (
-    <div className="bg-gray-900 text-white h-screen p-2 relative">
+    <div className="bg-customCharcoal text-white h-screen p-2 relative">
       <Routes>
         <Route path="/" element={<Home />}>
           <Route index element={<AllTasks />} />
