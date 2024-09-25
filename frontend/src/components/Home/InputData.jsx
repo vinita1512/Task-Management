@@ -1,26 +1,28 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
+import { toast } from "react-toastify";
+
 const InputData = ({
   setInputDiv,
-  InputDiv,
+  inputDiv,
   setTasks,
   editData,
   setEditData,
 }) => {
   const [data, setData] = useState({ title: "", desc: "" });
+  const [loading, setLoading] = useState(false);
+
   const change = (e) => {
     const { name, value } = e.target;
     setData({ ...data, [name]: value });
   };
 
   useEffect(() => {
-    if (editData) {
+    if (editData && editData.id) {
       setData({ title: editData.title, desc: editData.desc });
     }
   }, [editData]);
-
-  console.log("editdata", editData);
 
   const headers = {
     id: localStorage.getItem("id"),
@@ -29,70 +31,75 @@ const InputData = ({
 
   const submitData = async () => {
     if (data.title === "" || data.desc === "") {
-      alert("All fields are required ");
-    } else {
-      try {
-        const response = await axios.post(
-          `http://localhost:1000/api/v1/createtask`,
-          data,
-          {
-            headers,
-          }
-        );
-        setInputDiv("hidden");
-        console.log("response", response.data.newTask);
-        setTasks((prevData) => [...prevData, response.data.newTask]);
-
-        setData({ title: "", desc: "" });
-      } catch (error) {
-        console.log(error);
-      }
+      toast.error("All fields are required");
+      return;
+    }
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        `http://localhost:1000/api/v1/createtask`,
+        data,
+        {
+          headers,
+        }
+      );
+      setInputDiv("hidden");
+      setTasks((prevData) => [...prevData, response.data.newTask]);
+      setData({ title: "", desc: "" });
+      toast.success("Task created successfully!");
+    } catch (error) {
+      toast.error("Failed to create task");
+    } finally {
+      setLoading(false);
     }
   };
 
   const updateTask = async () => {
     if (data.title === "" || data.desc === "") {
-      alert("All fields are required ");
-    } else {
-      try {
-        const response = await axios.put(
-          `http://localhost:1000/api/v1/updatetask/${editData.id}`,
-          data,
-          {
-            headers,
-          }
-        );
-        console.log("response", response.data.editTask);
-        // setTasks((prevData) => [...prevData, response.data.editTask]);
-        setTasks((prevData) =>
-          prevData.map((item) =>
-            item._id === editData.id
-              ? { ...item, title: data.title, desc: data.desc }
-              : item
-          )
-        );
-        setEditData({ id: "", title: "", desc: "" });
-        setData({ title: "", desc: "" });
-        setInputDiv("hidden");
-      } catch (error) {
-        console.log(error);
-      }
+      toast.error("All fields are required");
+      return;
+    }
+    setLoading(true);
+
+    try {
+      const response = await axios.put(
+        `http://localhost:1000/api/v1/updatetask/${editData.id}`,
+        data,
+        {
+          headers,
+        }
+      );
+      setTasks((prevData) =>
+        prevData.map((item) =>
+          item._id === editData.id
+            ? { ...item, title: data.title, desc: data.desc }
+            : item
+        )
+      );
+      setEditData({ id: "", title: "", desc: "" });
+      setData({ title: "", desc: "" });
+      setInputDiv("hidden");
+      toast.success("Task updated successfully!");
+    } catch (error) {
+      toast.error("Failed to update task");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <>
       <div
-        className={`${InputDiv} fixed top-0 left-0 bg-gray-800 opacity-50 h-screen w-full`}
+        className={`${inputDiv} fixed top-0 left-0 bg-gray-800 opacity-50 h-screen w-full`}
       ></div>
 
       <div
-        className={`${InputDiv} fixed top-0 left-0 flex items-center justify-center h-screen  w-full`}
+        className={`${inputDiv} fixed top-0 left-0 flex items-center justify-center h-screen  w-full`}
       >
-        <div className="w-2/6 bg-gray-900 p-4 rounded">
+        <div className="w-full max-w-md bg-gray-900 p-4 rounded">
           <div className="flex justify-end">
             <button
-              className="text-2xl"
+              className="text-2xl text-gray-400 hover:text-gray-200"
               onClick={() => {
                 setInputDiv("hidden");
                 setData({ title: "", desc: "" });
@@ -106,7 +113,7 @@ const InputData = ({
             type="text"
             placeholder="Title"
             name="title"
-            className="px-3 py-2 rounded w-full  bg-gray-700 my-3"
+            className="px-3 py-2 rounded w-full bg-gray-700 my-3 text-white"
             value={data.title}
             onChange={change}
           />
@@ -116,25 +123,20 @@ const InputData = ({
             cols="30"
             rows="10"
             placeholder="Description"
-            className="px-3 py-2 rounded w-full bg-gray-700 my-3"
+            className="px-3 py-2 rounded w-full bg-gray-700 my-3 text-white resize-none"
             value={data.desc}
             onChange={change}
           ></textarea>
-          {editData.id === "" ? (
-            <button
-              className="px-3 py-2 bg-blue-400 text-xl"
-              onClick={submitData}
-            >
-              Submit
-            </button>
-          ) : (
-            <button
-              className="px-3 py-2 bg-blue-400 text-xl"
-              onClick={updateTask}
-            >
-              Update
-            </button>
-          )}
+
+          <button
+            className={`px-3 py-2 bg-blue-400 text-xl ${
+              loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+            onClick={editData.id ? updateTask : submitData}
+            disabled={loading}
+          >
+            {editData.id ? "Update" : "Submit"}
+          </button>
         </div>
       </div>
     </>

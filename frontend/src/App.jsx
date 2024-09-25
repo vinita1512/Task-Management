@@ -10,6 +10,9 @@ import Login from "./pages/Login";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { authActions } from "./store/auth";
+import { ToastContainer } from "react-toastify"; // Import ToastContainer
+import "react-toastify/dist/ReactToastify.css";
+
 const App = () => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   console.log("isLoggedIn", isLoggedIn);
@@ -25,17 +28,20 @@ const App = () => {
   }, []);
 
   return (
-    <div className="bg-customCharcoal text-white h-screen p-2 relative">
-      <Routes>
-        <Route path="/" element={<Home />}>
-          <Route index element={<AllTasks />} />
-          <Route path="/importantTasks" element={<ImportantTasks />} />
-          <Route path="/completedTasks" element={<CompletedTasks />} />
-          <Route path="/InCompletedTasks" element={<InCompletedTasks />} />
-        </Route>
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
-      </Routes>
+    <div className="bg-customCharcoal text-white p-4 h-screen flex flex-col overflow-hidden">
+      <div className="flex-grow overflow-auto">
+        <ToastContainer />
+        <Routes>
+          <Route path="/" element={<Home />}>
+            <Route index element={<AllTasks />} />
+            <Route path="/importantTasks" element={<ImportantTasks />} />
+            <Route path="/completedTasks" element={<CompletedTasks />} />
+            <Route path="/InCompletedTasks" element={<InCompletedTasks />} />
+          </Route>
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
+        </Routes>
+      </div>
     </div>
   );
 };

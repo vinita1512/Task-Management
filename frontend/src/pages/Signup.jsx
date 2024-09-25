@@ -2,46 +2,56 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+
 const Signup = () => {
   const navigate = useNavigate();
-
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   if (isLoggedIn === true) {
     navigate("/");
   }
+
   const [data, setData] = useState({ username: "", email: "", password: "" });
+  const [loading, setLoading] = useState(false);
+
   const change = (e) => {
     const { name, value } = e.target;
     setData({ ...data, [name]: value });
   };
 
-  const submit = async () => {
+  const submit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
     try {
       if (data.username === "" || data.email === "" || data.password === "") {
-        alert("All fields are required");
+        toast.error("All fields are required");
+        setLoading(false);
+        return;
       } else {
         const response = await axios.post(
           "http://localhost:1000/api/v1/signin",
           data
         );
-
         setData({ username: "", email: "", password: "" });
-        alert(response.data.message);
+        toast.success(response.data.message);
         navigate("/login");
       }
     } catch (error) {
-      alert(error.response.data.message);
+      toast.error(error.response.data.message);
+    } finally {
+      setLoading(false);
     }
   };
   return (
-    <div className="h-[98vh] flex items-center justify-center">
-      <div className="p-4 w-2/6 rounded bg-gray-800">
+    <div className=" flex items-center p-4 justify-center rounded bg-gray-800 h-full">
+      <div className="max-w-md w-full bg-gray-900 p-6 rounded-lg shadow-md">
         <div className="text-2xl font-semibold">Signup</div>
         <input
           type="text"
           placeholder="enter username"
-          className="bg-customGrayishCyan px-3 py-2 my-3 w-full rounded text-customDarkTeal"
+          className="bg-gray-700 px-3 py-2 my-3 w-full rounded text-white"
           name="username"
           value={data.username}
           onChange={change}
@@ -49,7 +59,7 @@ const Signup = () => {
         <input
           type="email"
           placeholder="enter email"
-          className="bg-customGrayishCyan px-3 py-2 my-3 w-full rounded text-customDarkTeal"
+          className="bg-gray-700 px-3 py-2 my-3 w-full rounded text-white"
           name="email"
           value={data.email}
           onChange={change}
@@ -58,20 +68,23 @@ const Signup = () => {
         <input
           type="password"
           placeholder="enter password"
-          className="bg-customGrayishCyan px-3 py-2 my-3 w-full rounded text-customDarkTeal"
+          className="bg-gray-700 px-3 py-2 my-3 w-full rounded text-white"
           name="password"
           value={data.password}
           onChange={change}
         />
-        <div className="w-full flex justify-between items-center">
+        <div className=" flex justify-between items-center">
           <button
-            className="bg-customTealBlue text-xl font-semibold px-3 py-2 rounded"
+            type="button"
+            className={`bg-customTealBlue text-xl font-semibold px-3 py-2 rounded ${
+              loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
             onClick={submit}
+            disabled={loading}
           >
-            Signup
+            {loading ? "Signing up..." : "Signup"}
           </button>
           <Link to="/login" className="text-gray-400 hover:text-gray-200">
-            {" "}
             Already have an account? Login here
           </Link>
         </div>
