@@ -20,7 +20,7 @@ const AllTasks = ({ home = "true" }) => {
   const handleImportantTask = async (id) => {
     try {
       await axios.put(
-        `http://localhost:1000/api/v1/updateimptask/${id}`,
+        `${window.location.origin}/api/v1/updateimptask/${id}`,
         {},
         { headers }
       );
@@ -38,7 +38,7 @@ const AllTasks = ({ home = "true" }) => {
   const handleCompleteTask = async (id) => {
     try {
       await axios.put(
-        `http://localhost:1000/api/v1/updatecomptask/${id}`,
+        `${window.location.origin}/api/v1/updatecomptask/${id}`,
         {},
         { headers }
       );
@@ -58,7 +58,7 @@ const AllTasks = ({ home = "true" }) => {
       setLoading(true);
       try {
         const response = await axios.get(
-          "http://localhost:1000/api/v1/getalltasks",
+          `${window.location.origin}/api/v1/getalltasks`,
           {
             headers,
           }

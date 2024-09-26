@@ -3,20 +3,21 @@ const app = express();
 require("dotenv").config();
 require("./conn/conn");
 const cors = require("cors");
+const path = require("path");
 const UserAPI = require("./routes/user");
 const TaskAPI = require("./routes/task");
-
+const PORT = process.env.PORT;
 app.use(cors());
 app.use(express.json());
 
-// /api/v1/signin
 app.use("/api/v1", UserAPI);
 app.use("/api/v1", TaskAPI);
-// app.use("/", (req, res) => {
-//   res.send("hello from backend side");
-// });
 
-const PORT = 1000;
+app.get("/", (req, res) => {
+  app.use(express.static(path.resolve(__dirname, "frontend", "dist")));
+  res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+});
+
 app.listen(PORT, () => {
   console.log(`server started on port ${PORT}`);
 });

@@ -58,7 +58,7 @@ const Sidebar = () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          "http://localhost:1000/api/v1/getalltasks",
+          `${window.location.origin}/api/v1/getalltasks`,
           {
             headers,
           }

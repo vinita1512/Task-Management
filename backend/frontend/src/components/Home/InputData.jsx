@@ -37,7 +37,7 @@ const InputData = ({
     setLoading(true);
     try {
       const response = await axios.post(
-        `http://localhost:1000/api/v1/createtask`,
+        `${window.location.origin}/api/v1/createtask`,
         data,
         {
           headers,
@@ -63,7 +63,7 @@ const InputData = ({
 
     try {
       const response = await axios.put(
-        `http://localhost:1000/api/v1/updatetask/${editData.id}`,
+        `${window.location.origin}/api/v1/updatetask/${editData.id}`,
         data,
         {
           headers,

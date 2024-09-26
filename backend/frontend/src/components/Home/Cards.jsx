@@ -24,7 +24,7 @@ const Cards = ({
   const handleDeleteTask = async (id) => {
     setLoading(true);
     try {
-      await axios.delete(`http://localhost:1000/api/v1/deletetask/${id}`, {
+      await axios.delete(`${window.location.origin}/api/v1/deletetask/${id}`, {
         headers,
       });
       setData((prevData) => prevData.filter((item) => item._id !== id));

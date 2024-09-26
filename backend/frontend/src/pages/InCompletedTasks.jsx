@@ -3,9 +3,9 @@ import Cards from "../components/Home/Cards";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const CompletedTasks = () => {
+const InCompletedTasks = () => {
   const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const headers = {
     id: localStorage.getItem("id"),
@@ -14,46 +14,27 @@ const CompletedTasks = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      setLoading(true);
       try {
         const response = await axios.get(
-          "http://localhost:1000/api/v1/getcomptasks",
+          `${window.location.origin}/api/v1/getincomptasks`,
           {
             headers,
           }
         );
         setData(response.data.data);
       } catch (error) {
-        toast.error("Failed to fetch tasks");
+        toast.error("Failed to fetch incomplete tasks");
       } finally {
         setLoading(false);
       }
     };
     fetch();
-  }, []);
-
-  const handleImportantTask = async (id) => {
-    try {
-      await axios.put(
-        `http://localhost:1000/api/v1/updateimptask/${id}`,
-        {},
-        { headers }
-      );
-      setData((prevData) =>
-        prevData.map((item) =>
-          item._id === id ? { ...item, important: !item.important } : item
-        )
-      );
-      toast.success("Task updated successfully");
-    } catch (error) {
-      toast.error("Failed to update important task");
-    }
-  };
+  }, [headers]);
 
   const handleCompleteTask = async (id) => {
     try {
       await axios.put(
-        `http://localhost:1000/api/v1/updatecomptask/${id}`,
+        `${window.location.origin}/api/v1/updatecomptask/${id}`,
         {},
         { headers }
       );
@@ -64,10 +45,28 @@ const CompletedTasks = () => {
     }
   };
 
+  const handleImportantTask = async (id) => {
+    try {
+      await axios.put(
+        `${window.location.origin}/api/v1/updateimptask/${id}`,
+        {},
+        { headers }
+      );
+      setData((prevData) =>
+        prevData.map((item) =>
+          item._id === id ? { ...item, important: !item.important } : item
+        )
+      );
+      toast.success("Task Updated Successfully");
+    } catch (error) {
+      toast.error("Failed to update important task");
+    }
+  };
+
   return (
-    <div className="flex flex-col flex-grow px-4 py-2">
+    <div className="flex flex-col flex-grow px-4 py-2 ">
       {loading ? (
-        <p className="text-center text-gray-400">Loading completed tasks...</p>
+        <p className="text-center text-gray-400">Loading incomplete tasks...</p>
       ) : data && data.length > 0 ? (
         <Cards
           home={"false"}
@@ -78,11 +77,11 @@ const CompletedTasks = () => {
         />
       ) : (
         <p className="text-center text-gray-400">
-          No completed tasks available.
+          No incomplete tasks available.
         </p>
       )}
     </div>
   );
 };
 
-export default CompletedTasks;
+export default InCompletedTasks;
