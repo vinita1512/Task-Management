@@ -13,11 +13,6 @@ app.use(express.json());
 app.use("/api/v1", UserAPI);
 app.use("/api/v1", TaskAPI);
 
-app.get("/", (req, res) => {
-  app.use(express.static(path.resolve(__dirname, "frontend", "dist")));
-  res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
-});
-
 app.listen(PORT, () => {
   console.log(`server started on port ${PORT}`);
 });

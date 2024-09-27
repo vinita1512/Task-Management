@@ -11,13 +11,15 @@ const ImportantTasks = () => {
     id: localStorage.getItem("id"),
     authorization: `Bearer ${localStorage.getItem("token")}`,
   };
+
+  const url = import.meta.env.VITE_BACKEND_API_URL;
   
   useEffect(() => {
     const fetch = async () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `${window.location.origin}/api/v1/getimptasks`,
+          `${url}/api/v1/getimptasks`,
           {
             headers,
           }
@@ -36,7 +38,7 @@ const ImportantTasks = () => {
   const handleImportantTask = async (id) => {
     try {
       await axios.put(
-        `${window.location.origin}/api/v1/updateimptask/${id}`,
+        `${url}/api/v1/updateimptask/${id}`,
         {},
         { headers }
       );

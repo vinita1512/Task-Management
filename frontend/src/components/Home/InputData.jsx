@@ -29,6 +29,8 @@ const InputData = ({
     authorization: `Bearer ${localStorage.getItem("token")}`,
   };
 
+  const url = import.meta.env.VITE_BACKEND_API_URL;
+
   const submitData = async () => {
     if (data.title === "" || data.desc === "") {
       toast.error("All fields are required");
@@ -37,7 +39,7 @@ const InputData = ({
     setLoading(true);
     try {
       const response = await axios.post(
-        `${window.location.origin}/api/v1/createtask`,
+        `${url}/api/v1/createtask`,
         data,
         {
           headers,
@@ -63,7 +65,7 @@ const InputData = ({
 
     try {
       const response = await axios.put(
-        `${window.location.origin}/api/v1/updatetask/${editData.id}`,
+        `${url}/api/v1/updatetask/${editData.id}`,
         data,
         {
           headers,

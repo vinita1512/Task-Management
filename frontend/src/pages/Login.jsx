@@ -25,6 +25,8 @@ const Login = () => {
     setData({ ...data, [name]: value });
   };
 
+  const url = import.meta.env.VITE_BACKEND_API_URL;
+
   const submit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -35,7 +37,7 @@ const Login = () => {
         return;
       } else {
         const response = await axios.post(
-          `${window.location.origin}/api/v1/login`,
+          `${url}/api/v1/login`,
           data
         );
         setData({ username: "", password: "" });

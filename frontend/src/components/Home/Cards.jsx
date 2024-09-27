@@ -21,10 +21,12 @@ const Cards = ({
     authorization: `Bearer ${localStorage.getItem("token")}`,
   };
 
+  const url = import.meta.env.VITE_BACKEND_API_URL;
+
   const handleDeleteTask = async (id) => {
     setLoading(true);
     try {
-      await axios.delete(`${window.location.origin}/api/v1/deletetask/${id}`, {
+      await axios.delete(`${url}/api/v1/deletetask/${id}`, {
         headers,
       });
       setData((prevData) => prevData.filter((item) => item._id !== id));

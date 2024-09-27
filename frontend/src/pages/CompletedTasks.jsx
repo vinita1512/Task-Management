@@ -12,12 +12,14 @@ const CompletedTasks = () => {
     authorization: `Bearer ${localStorage.getItem("token")}`,
   };
 
+  const url = import.meta.env.VITE_BACKEND_API_URL;
+
   useEffect(() => {
     const fetch = async () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `${window.location.origin}/api/v1/getcomptasks`,
+          `${url}/api/v1/getcomptasks`,
           {
             headers,
           }
@@ -35,7 +37,7 @@ const CompletedTasks = () => {
   const handleImportantTask = async (id) => {
     try {
       await axios.put(
-        `${window.location.origin}/api/v1/updateimptask/${id}`,
+        `${url}/api/v1/updateimptask/${id}`,
         {},
         { headers }
       );
@@ -53,7 +55,7 @@ const CompletedTasks = () => {
   const handleCompleteTask = async (id) => {
     try {
       await axios.put(
-        `${window.location.origin}/api/v1/updatecomptask/${id}`,
+        `${url}/api/v1/updatecomptask/${id}`,
         {},
         { headers }
       );

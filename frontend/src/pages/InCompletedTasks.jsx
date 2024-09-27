@@ -12,11 +12,13 @@ const InCompletedTasks = () => {
     authorization: `Bearer ${localStorage.getItem("token")}`,
   };
 
+  const url = import.meta.env.VITE_BACKEND_API_URL;
+
   useEffect(() => {
     const fetch = async () => {
       try {
         const response = await axios.get(
-          `${window.location.origin}/api/v1/getincomptasks`,
+          `${url}/api/v1/getincomptasks`,
           {
             headers,
           }
@@ -34,7 +36,7 @@ const InCompletedTasks = () => {
   const handleCompleteTask = async (id) => {
     try {
       await axios.put(
-        `${window.location.origin}/api/v1/updatecomptask/${id}`,
+        `${url}/api/v1/updatecomptask/${id}`,
         {},
         { headers }
       );
@@ -48,7 +50,7 @@ const InCompletedTasks = () => {
   const handleImportantTask = async (id) => {
     try {
       await axios.put(
-        `${window.location.origin}/api/v1/updateimptask/${id}`,
+        `${url}/api/v1/updateimptask/${id}`,
         {},
         { headers }
       );

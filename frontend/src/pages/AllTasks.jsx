@@ -17,10 +17,12 @@ const AllTasks = ({ home = "true" }) => {
     authorization: `Bearer ${localStorage.getItem("token")}`,
   };
 
+  const url = import.meta.env.VITE_BACKEND_API_URL;
+
   const handleImportantTask = async (id) => {
     try {
       await axios.put(
-        `${window.location.origin}/api/v1/updateimptask/${id}`,
+        `${url}/api/v1/updateimptask/${id}`,
         {},
         { headers }
       );
@@ -38,7 +40,7 @@ const AllTasks = ({ home = "true" }) => {
   const handleCompleteTask = async (id) => {
     try {
       await axios.put(
-        `${window.location.origin}/api/v1/updatecomptask/${id}`,
+        `${url}/api/v1/updatecomptask/${id}`,
         {},
         { headers }
       );
@@ -58,7 +60,7 @@ const AllTasks = ({ home = "true" }) => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `${window.location.origin}/api/v1/getalltasks`,
+          `${url}/api/v1/getalltasks`,
           {
             headers,
           }

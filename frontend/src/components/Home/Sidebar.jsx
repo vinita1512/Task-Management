@@ -53,12 +53,13 @@ const Sidebar = () => {
     authorization: `Bearer ${localStorage.getItem("token")}`,
   };
 
+  const url = import.meta.env.VITE_BACKEND_API_URL;
   useEffect(() => {
     const fetch = async () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `${window.location.origin}/api/v1/getalltasks`,
+          `${url}/api/v1/getalltasks`,
           {
             headers,
           }
