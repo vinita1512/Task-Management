@@ -3,14 +3,10 @@ const app = express();
 require("dotenv").config();
 require("./conn/conn");
 const cors = require("cors");
-const path = require("path");
 const UserAPI = require("./routes/user");
 const TaskAPI = require("./routes/task");
 const PORT = process.env.PORT;
-app.use(cors({
-  origin: "https://task-management-gamma-five.vercel.app",
-  credentials: true
-}));
+app.use(cors());
 app.use(express.json());
 
 app.use("/api/v1", UserAPI);
