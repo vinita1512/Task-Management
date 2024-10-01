@@ -55,6 +55,7 @@ const Login = () => {
       setLoading(false);
     }
   };
+  console.log("login:",import.meta.env.VITE_BACKEND_API_URL);
 
   return (
     <div className=" flex items-center p-4 justify-center rounded bg-gray-800 h-full">
