@@ -8,7 +8,11 @@ const UserAPI = require("./routes/user");
 const TaskAPI = require("./routes/task");
 const PORT = process.env.PORT || 1000;
 const _dirname = path.resolve();
-app.use(cors());
+const corsOptions = {
+    origin: "https://task-management-jsy5.onrender.com",
+    credentials: true
+}
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use("/api/v1", UserAPI);
