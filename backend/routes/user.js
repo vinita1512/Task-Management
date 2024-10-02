@@ -36,36 +36,30 @@ router.post("/signin", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-  const { username, password } = req.body;
-  const existingUser = await User.findOne({ username: username });
+  try {
+    const { username, password } = req.body;
+    const existingUser = await User.findOne({ username: username });
 
-  if (!existingUser) {
-    return res.status(400).json({ message: "Invalid credentials" });
-  }
-  bcrypt.compare(password, existingUser.password, (err, data) => {
-    if (data) {
-      const authClaims = [
-        {
-          name: username,
-        },
-        {
-          jti: jwt.sign({}, "gdgdggedRWTW"),
-        },
-      ];
-
-      const token = jwt.sign({ authClaims }, "gdgdggedRWTW", {
-        expiresIn: "2d",
-      });
-      res.status(200).json({
-        id: existingUser._id,
-        token: token,
-      });
-    } else {
-      return res.status(400).json({
-        message: "Invalid credentials",
-      });
+    if (!existingUser) {
+      return res.status(400).json({ message: "Invalid credentials" });
     }
-  });
+    const isMatch = await bcrypt.compare(password, existingUser.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
+    const token = jwt.sign(
+      { id: existingUser._id, username: existingUser.username },
+      process.env.JWT_SECRET,
+      { expiresIn: "2d" }
+    );
+
+    return res.status(200).json({
+      id: existingUser._id,
+      token,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
 });
 
 module.exports = router;
